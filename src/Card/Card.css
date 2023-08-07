@@ -1,0 +1,14 @@
+.card-red {
+  color: red;
+  font-size: 100px;
+  background-color: white;
+  width: 70px;
+  height: 80px;
+  padding: 0px;
+  margin: 0px;
+}
+
+.card-black {
+  color: black;
+  font-size: 100px;
+}
