@@ -1,7 +1,7 @@
 import React from "react";
-import { PrimaryButtonProps } from "../../Types/interfaces";
+import { ButtonProps } from "../../Types/interfaces";
 
-export default function PrimaryButton({ text, onClick }: PrimaryButtonProps) {
+export default function PrimaryButton({ text, onClick }: ButtonProps) {
   return (
     <div
       style={{
@@ -10,7 +10,7 @@ export default function PrimaryButton({ text, onClick }: PrimaryButtonProps) {
         alignItems: "center",
         flexDirection: "column",
         borderRadius: "40px",
-        width: "100px",
+        width: "120px",
         padding: "10px",
         height: "20px",
         color: "#FFFFFF",

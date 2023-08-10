@@ -11,12 +11,12 @@ const Card = ({ card, isBack }: { card: PlayingCard; isBack: boolean }) => {
     <>
       {isBack ? (
         <>
-          <img src={stylishBack} height="150px" />
+          <img src={stylishBack} height="120px" />
         </>
       ) : (
         <img
           src={card.image}
-          height="150px"
+          height="120px"
           style={{
             border: "1px solid grey",
             backgroundColor: "white",

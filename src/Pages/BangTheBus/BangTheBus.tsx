@@ -11,7 +11,11 @@ import {
   shuffleDeck,
 } from "../../Card/Controller";
 import { isRed, getValue } from "./Context";
+import { useNavigate } from "react-router-dom";
+import BackButton from "../../UI/Buttons/BackButton";
+import { MainRoutes } from "../../Routes/Routes";
 export default function BangTheBus() {
+  const navigation = useNavigate();
   const [deckOfCards, setDeckOfCards] = useState<PlayingCard[]>(
     shuffleDeck([...playingCards])
   );
@@ -48,9 +52,6 @@ export default function BangTheBus() {
         let firstCardValue = getValue(getTopOfDeck(discardPile));
         let secondCardValue = getValue(getSecondCardOfDeck(discardPile));
         let drawnCardValue = getValue(getTopOfDeck(deckOfCards));
-        console.log(drawnCardValue);
-        console.log(secondCardValue);
-        console.log(firstCardValue);
         // win condition #1 drawn is more than second and less than first vice versa and inbtw
         if (
           (input === "inBetween" &&
@@ -71,9 +72,11 @@ export default function BangTheBus() {
         else if (
           input === "outside" &&
           ((firstCardValue > secondCardValue &&
-            drawnCardValue > firstCardValue) ||
+            (drawnCardValue > firstCardValue ||
+              drawnCardValue < secondCardValue)) ||
             (firstCardValue < secondCardValue &&
-              drawnCardValue < firstCardValue) ||
+              (drawnCardValue < firstCardValue ||
+                drawnCardValue > secondCardValue)) ||
             (firstCardValue === secondCardValue &&
               (drawnCardValue > firstCardValue ||
                 drawnCardValue < secondCardValue)))
@@ -218,145 +221,153 @@ export default function BangTheBus() {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        marginTop: 100,
-      }}
-    >
-      <h1 style={{ color: "white" }}>Bang The Bus!</h1>
-      {deckOfCards.length <= 0 ? (
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            gap: 0,
-          }}
-        >
-          <p>Game Over!</p>
-          <p>Penalty: MAX</p>
-          <PrimaryButton
-            text="reset"
-            onClick={() => {
-              resetGame();
-            }}
-          ></PrimaryButton>
-        </div>
-      ) : (
-        <>
-          <Card card={deckOfCards[0]} isBack={true}></Card>
-
-          <p>{deckOfCards.length} cards left</p>
-          {isGameOver ? (
-            <div style={{ marginBottom: 10 }}>
-              <PrimaryButton
-                text="reset"
-                onClick={() => {
-                  resetGame();
-                }}
-              ></PrimaryButton>
-              <PrimaryButton
-                text="retry"
-                onClick={() => {
-                  retry();
-                }}
-              ></PrimaryButton>
-            </div>
-          ) : (
-            <div style={{ marginBottom: 10 }}>
-              <Game stage={stage}></Game>
-            </div>
-          )}
+    <div style={{ width: "100%", paddingLeft: 20 }}>
+      <BackButton
+        onClick={() => {
+          navigation(`${MainRoutes.Home.path}`);
+        }}
+        text=""
+      ></BackButton>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          marginTop: 0,
+        }}
+      >
+        <h1 style={{ color: "white" }}>Bang The Bus!</h1>
+        {deckOfCards.length <= 0 ? (
           <div
             style={{
               display: "flex",
-              flexDirection: "row",
-              gap: 10,
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: 0,
             }}
           >
-            {discardPile.length > 0 ? (
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  fontSize: 12,
-                  alignItems: "center",
-                }}
-              >
-                <Card card={getTopOfDeck(discardPile)} isBack={false}></Card>
-                <p>Drawn Card</p>
-              </div>
-            ) : (
-              <></>
-            )}
-            {stage == 3 && isGameOver == false ? (
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  fontSize: 12,
-                  alignItems: "center",
-                }}
-              >
-                <Card
-                  card={discardPile[discardPile.length - 2]}
-                  isBack={false}
-                ></Card>
-                <p>Prev Card</p>
-              </div>
-            ) : (
-              <></>
-            )}
+            <p>Game Over!</p>
+            <p>Penalty: MAX</p>
+            <PrimaryButton
+              text="reset"
+              onClick={() => {
+                resetGame();
+              }}
+            ></PrimaryButton>
           </div>
-          <div style={{ display: "flex", flexDirection: "row", gap: 10 }}>
-            {(stage == 4 && isGameOver === false) ||
-            (stage == 3 && isGameOver === true) ? (
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  fontSize: 12,
-                  alignItems: "center",
-                }}
-              >
-                <Card
-                  card={discardPile[discardPile.length - 3]}
-                  isBack={false}
-                ></Card>
-                <p>Prev Card</p>
-              </div>
-            ) : (
-              <></>
-            )}
-            {(stage == 4 && isGameOver === false) ||
-            (stage == 3 && isGameOver === true) ? (
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  fontSize: 12,
-                  alignItems: "center",
-                }}
-              >
-                <Card
-                  card={discardPile[discardPile.length - 2]}
-                  isBack={false}
-                ></Card>
-                <p>Prev Card</p>
-              </div>
-            ) : (
-              <></>
-            )}
-          </div>
+        ) : (
+          <>
+            <Card card={deckOfCards[0]} isBack={true}></Card>
 
-          {isGameOver === true && <p>penalty: {stage}</p>}
-        </>
-      )}
+            <p>{deckOfCards.length} cards left</p>
+            {isGameOver ? (
+              <div style={{ marginBottom: 10 }}>
+                <PrimaryButton
+                  text="reset"
+                  onClick={() => {
+                    resetGame();
+                  }}
+                ></PrimaryButton>
+                <PrimaryButton
+                  text="retry"
+                  onClick={() => {
+                    retry();
+                  }}
+                ></PrimaryButton>
+              </div>
+            ) : (
+              <div style={{ marginBottom: 10 }}>
+                <Game stage={stage}></Game>
+              </div>
+            )}
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                gap: 10,
+              }}
+            ></div>
+            <div style={{ display: "flex", flexDirection: "row", gap: 10 }}>
+              {discardPile.length > 0 ? (
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    fontSize: 12,
+                    alignItems: "center",
+                  }}
+                >
+                  <Card card={getTopOfDeck(discardPile)} isBack={false}></Card>
+                  <p>Drawn Card</p>
+                </div>
+              ) : (
+                <></>
+              )}
+              {stage == 3 && isGameOver == false ? (
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    fontSize: 12,
+                    alignItems: "center",
+                  }}
+                >
+                  <Card
+                    card={discardPile[discardPile.length - 2]}
+                    isBack={false}
+                  ></Card>
+                  <p>Prev Card</p>
+                </div>
+              ) : (
+                <></>
+              )}
+              {(stage == 4 && isGameOver === false) ||
+              (stage == 3 && isGameOver === true) ? (
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    fontSize: 12,
+                    alignItems: "center",
+                  }}
+                >
+                  <Card
+                    card={discardPile[discardPile.length - 3]}
+                    isBack={false}
+                  ></Card>
+                  <p>Prev Card</p>
+                </div>
+              ) : (
+                <></>
+              )}
+
+              {(stage == 4 && isGameOver === false) ||
+              (stage == 3 && isGameOver === true) ? (
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    fontSize: 12,
+                    alignItems: "center",
+                  }}
+                >
+                  <Card
+                    card={discardPile[discardPile.length - 2]}
+                    isBack={false}
+                  ></Card>
+                  <p>Prev Card</p>
+                </div>
+              ) : (
+                <></>
+              )}
+            </div>
+
+            {isGameOver === true && <p>penalty: {stage}</p>}
+          </>
+        )}
+      </div>
     </div>
   );
 }

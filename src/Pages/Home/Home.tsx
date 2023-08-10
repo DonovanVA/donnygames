@@ -15,6 +15,8 @@ export default function Home() {
         alignItems: "center",
       }}
     >
+      <h1 style={{ color: "white" }}>Donny Games!</h1>
+      <h3 style={{ color: "white" }}>Offline</h3>
       <PrimaryButton
         text="24"
         onClick={() => {
@@ -25,6 +27,13 @@ export default function Home() {
         text="Bang The Bus"
         onClick={() => {
           navigation(`${MainRoutes.BangTheBus.path}`);
+        }}
+      ></PrimaryButton>
+      <h3 style={{ color: "white" }}>Online</h3>
+      <PrimaryButton
+        text="Poker"
+        onClick={() => {
+          navigation(`${MainRoutes.Poker.path}`);
         }}
       ></PrimaryButton>
     </div>

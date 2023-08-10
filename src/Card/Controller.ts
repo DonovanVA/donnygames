@@ -1,8 +1,6 @@
 import { PlayingCard, Suit } from "../Types/interfaces";
 
-export const discardPile = (setDeckOfCards: React.SetStateAction<PlayingCard[]>, deckOfCards: PlayingCard[]) => {
 
-};
 
 export const shuffleDeck = (deckOfCards: PlayingCard[]):PlayingCard[] => {
     let copyofDeck = [...deckOfCards]

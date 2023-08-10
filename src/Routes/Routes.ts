@@ -10,4 +10,12 @@ export const MainRoutes = {
     name: "TwentyFour",
     path: "/TwentyFour",
   },
+  Home: {
+    name: "Home",
+    path: "/",
+  },
+  Poker: {
+    name: "Poker",
+    path: "/Poker",
+  },
 };
