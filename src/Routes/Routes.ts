@@ -18,4 +18,8 @@ export const MainRoutes = {
     name: "Poker",
     path: "/Poker",
   },
+  PokerRoom:{
+    name:"PokerRoom",
+    path:"/PokerRoom"
+  }
 };

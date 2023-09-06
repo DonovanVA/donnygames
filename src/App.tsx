@@ -9,17 +9,17 @@ import BangTheBus from "./Pages/BangTheBus/BangTheBus";
 import TwentyFour from "./Pages/TwentyFour/TwentyFour";
 import Home from "./Pages/Home/Home";
 import Poker from "./Pages/Poker/Poker";
+import PokerRoom from "./Pages/Poker/PokerRoom";
+import { AppClientContext } from "./Context/AppContext";
+import AppRoutes from "./Routes/AppRoutes";
 const App = () => {
   return (
     <div className="App">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path={MainRoutes.BangTheBus.path} element={<BangTheBus />} />
-          <Route path={MainRoutes.TwentyFour.path} element={<TwentyFour />} />
-          <Route path={MainRoutes.Poker.path} element={<Poker />} />
-        </Routes>
-      </BrowserRouter>
+      <AppClientContext>
+        <BrowserRouter>
+          <AppRoutes></AppRoutes>
+        </BrowserRouter>
+      </AppClientContext>
     </div>
   );
 };
