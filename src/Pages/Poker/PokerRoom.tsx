@@ -21,7 +21,6 @@ export default function PokerRoom() {
       console.log("Connected to server");
       if (app.table?.pokerTable_id !== 0) {
         socket.emit(SOCKETEVENTS.emit.joinTable, app.table?.pokerTable_id); // Join the specific table based on the room number
-        socket.emit(SOCKETEVENTS.emit.RequestGameState);
       }
     });
     socket.on(
@@ -70,7 +69,7 @@ export default function PokerRoom() {
 
   window.addEventListener("beforeunload", () => {
     // Emit a custom event to the server indicating intentional disconnect
-    socket.disconnect();
+    //socket.disconnect();
   });
   const renderCards = (rawCardData: RawPokerCard[]) => {};
   return (

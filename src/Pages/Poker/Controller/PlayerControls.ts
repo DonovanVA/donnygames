@@ -15,5 +15,4 @@ export const PlayerController = async (
     PlayerControls,
     amount
   );
-  socket.emit(SOCKETEVENTS.emit.RequestGameState, table_id);
 };

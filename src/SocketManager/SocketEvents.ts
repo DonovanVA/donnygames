@@ -15,6 +15,6 @@ export const SOCKETEVENTS = {
     intentionalDisconnect: "intentionalDisconnect",
     disconnect: "disconnect",
     PlayerAction: "PlayerAction",
-    RequestGameState: "onRequestGameState",
+
   },
 };
