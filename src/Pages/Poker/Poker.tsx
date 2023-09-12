@@ -46,7 +46,9 @@ export default function Poker() {
             table: newPoker.table,
           });
           navigate(
-            `${MainRoutes.PokerRoom.path}/${newPoker.table.pokerTable_id.toString()}`
+            `${
+              MainRoutes.PokerRoom.path
+            }/${newPoker.table.pokerTable_id.toString()}`
           ); // Navigate to the PokerRoom component with the new table ID
         } else {
           console.log("table not found");
@@ -56,9 +58,9 @@ export default function Poker() {
 
     // Clean up the event listener when the component unmounts
     return () => {
-      socket.off("tableCreated");
+      //socket.off("tableCreated");
     };
-  }, [app, navigate, setApp]);
+  }, [app, navigate, setApp, socket]);
   window.addEventListener("beforeunload", () => {
     // Emit a custom event to the server indicating intentional disconnect
     socket.emit(SOCKETEVENTS.emit.intentionalDisconnect);

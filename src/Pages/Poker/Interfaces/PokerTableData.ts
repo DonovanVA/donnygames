@@ -35,6 +35,8 @@ export interface RawPlayerTableOrderInstance {
   pokerTable_id: number;
   order: number;
   createdAt: string;
+  isHost: boolean;
+  folded: boolean;
 }
 
 export interface RawPlayer {
@@ -43,6 +45,7 @@ export interface RawPlayer {
   name: string;
   totalBuyIn: number;
   cash: number;
+  playerTableOrderInstance: RawPlayerTableOrderInstance;
   cards: RawPokerCard[];
   createdAt: string;
   bet: number;
