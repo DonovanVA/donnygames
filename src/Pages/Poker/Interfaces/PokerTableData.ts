@@ -1,16 +1,15 @@
+import { Suit, Value } from "../../../Types/interfaces";
+
 export enum BettingRounds {
   BEGINNING = "BEGINNING",
+  FIRSTBETTINGROUND = "FIRSTBETTINGROUND",
   FIRSTFLOP = "FIRSTFLOP",
+  SECONDBETTINGROUND = "SECONDBETTINGROUND",
   SECONDFLOP = "SECONDFLOP",
+  THIRDBETTINGROUND = "THIRDBETTINGROUND",
   THIRDFLOP = "THIRDFLOP",
+  FINALBETTINGROUND = "FINALBETTINGROUND",
   ENDING = "ENDING",
-}
-
-export enum RawSuit {
-  SPADES = "SPADES",
-  CLUBS = "CLUBS",
-  DIAMONDS = "DIAMONDS",
-  HEARTS = "HEARTS",
 }
 
 export enum RawColor {
@@ -20,11 +19,13 @@ export enum RawColor {
 export interface RawPokerCard {
   card_id: number;
   faceDown: boolean;
-  suit: RawSuit;
-  value: number;
+  suit: Suit;
+  value: Value;
   color: RawColor;
   playerId: number;
   pokerTable_id: number;
+  image_url_front: string;
+  image_url_back: string;
 }
 
 export interface Table {

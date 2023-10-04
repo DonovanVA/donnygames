@@ -6,7 +6,7 @@ import { shuffleDeck } from "../../Card/Controller";
 import { PlayingCard } from "../../Types/interfaces";
 import BackButton from "../../UI/Buttons/BackButton";
 import { MainRoutes } from "../../Routes/Routes";
-import Card from "../../Card/Card";
+import Card from "../../Card/Renderer/RenderLocalCard";
 import PrimaryButton from "../../UI/Buttons/PrimaryButton";
 export default function TwentyFour() {
   const navigation = useNavigate();
@@ -23,11 +23,12 @@ export default function TwentyFour() {
     setDiscardPile([]);
   };
   return (
-    <div style={{ width: "100%", paddingLeft:20 }}>
+    <div style={{ width: "100%", paddingLeft: 20 }}>
       <BackButton
         onClick={() => {
           navigation(`${MainRoutes.Home.path}`);
         }}
+        disabled={false}
         text=""
       ></BackButton>
       <div
@@ -40,7 +41,7 @@ export default function TwentyFour() {
         }}
       >
         <h1 style={{ color: "white" }}>Twenty-Four</h1>
-        {<Card card={deckOfCards[0]} isBack={true}></Card>}
+        {<Card card={deckOfCards[0]} isFaceDown={true}></Card>}
         <p>{deckOfCards.length} cards left</p>
         {deckOfCards.length >= 4 && (
           <PrimaryButton
@@ -48,6 +49,7 @@ export default function TwentyFour() {
             onClick={() => {
               discardTopFourCards();
             }}
+            disabled={false}
           ></PrimaryButton>
         )}
         <PrimaryButton
@@ -55,6 +57,7 @@ export default function TwentyFour() {
           onClick={() => {
             resetGame();
           }}
+          disabled={false}
         ></PrimaryButton>
         <div
           style={{
@@ -65,7 +68,7 @@ export default function TwentyFour() {
           }}
         >
           {discardPile.map((card: PlayingCard, index: number) => {
-            return <Card card={card} isBack={false}></Card>;
+            return <Card card={card} isFaceDown={false}></Card>;
           })}
         </div>
       </div>

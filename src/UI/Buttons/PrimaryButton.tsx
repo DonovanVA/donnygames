@@ -1,11 +1,16 @@
 import React from "react";
 import { ButtonProps } from "../../Types/interfaces";
 
-export default function PrimaryButton({ text, onClick }: ButtonProps) {
+export default function PrimaryButton({
+  text,
+  onClick,
+  disabled,
+  errormsg,
+}: ButtonProps) {
   return (
     <div
       style={{
-        backgroundColor: "blue",
+        backgroundColor: disabled ? "grey" : "blue",
         display: "flex",
         alignItems: "center",
         flexDirection: "column",
@@ -18,7 +23,13 @@ export default function PrimaryButton({ text, onClick }: ButtonProps) {
         fontSize: "16px",
         margin: 5,
       }}
-      onClick={onClick}
+      onClick={
+        !disabled
+          ? onClick
+          : () => {
+              console.log(errormsg);
+            }
+      }
     >
       {text}
     </div>

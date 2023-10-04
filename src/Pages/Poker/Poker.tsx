@@ -86,8 +86,16 @@ export default function Poker() {
         value={joinTableId}
         onChange={(e) => setJoinTableId(e.target.value)}
       />
-      <PrimaryButton onClick={handleJoinTable} text="Join Table" />
-      <PrimaryButton onClick={handleCreateTable} text="Create Table" />
+      <PrimaryButton
+        onClick={handleJoinTable}
+        text="Join Table"
+        disabled={false}
+      />
+      <PrimaryButton
+        onClick={handleCreateTable}
+        text="Create Table"
+        disabled={false}
+      />
     </div>
   );
 }

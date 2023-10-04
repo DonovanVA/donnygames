@@ -1,5 +1,5 @@
 import React from "react";
-import Card from "./Card/Card";
+import Card from "./Card/Renderer/RenderLocalCard";
 import "./App.css";
 import { playingCards } from "./Card/Cards";
 import { Route } from "react-router-dom";

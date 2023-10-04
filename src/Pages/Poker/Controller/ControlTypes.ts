@@ -4,4 +4,5 @@ export enum PlayerControls {
   BUYIN = "BUYIN",
   STARTGAME = "STARTGAME",
   ENDGAME = "ENDGAME",
+  NEXTROUND = "NEXTROUND",
 }

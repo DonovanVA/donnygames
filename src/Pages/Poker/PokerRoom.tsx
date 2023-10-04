@@ -1,20 +1,26 @@
 import React, { useEffect, useState, useContext } from "react";
-import io from "socket.io-client";
 import { AppContext } from "../../Context/AppContext";
 import socket from "../../SocketManager/SocketManager";
 import { SOCKETEVENTS } from "../../SocketManager/SocketEvents";
 import {
+  BettingRounds,
   RawPokerCard,
   RawPokerServiceData,
-  RawTableData,
 } from "./Interfaces/PokerTableData";
 import { RawPlayer } from "./Interfaces/PokerTableData";
-import PrimaryButton from "../../UI/Buttons/PrimaryButton";
-import { useImmer } from "use-immer";
+import { DisplayGameMoveButtons } from "./Controller/ControllerDisplays/DisplayGameMoveButtons";
+import { DisplayHostButtons } from "./Controller/ControllerDisplays/DisplayHostButtons";
+import PlayerCardsRenderer from "./Renderers/PlayerCardsRenderer";
+import { playingCards } from "../../Card/Cards";
+import RenderServerCard from "../../Card/Renderer/RenderServerCard";
 import { PlayerController } from "./Controller/PlayerControls";
+import PrimaryButton from "../../UI/Buttons/PrimaryButton";
 import { PlayerControls } from "./Controller/ControlTypes";
+// TBD: after 2 rounds, then has issues continuing
 export default function PokerRoom() {
   const { app, setApp } = useContext(AppContext);
+  const [winner_id, setWinner_id] = useState<number>(0);
+
   useEffect(() => {
     console.log(app);
     socket.on(SOCKETEVENTS.on.connect, async () => {
@@ -27,20 +33,29 @@ export default function PokerRoom() {
       SOCKETEVENTS.on.getTableData,
       async (newTableData: RawPokerServiceData) => {
         console.log("Received table update:", newTableData);
-        setApp({
-          ...app,
-          state: newTableData.state,
-          table: newTableData.table,
-        });
+        const newPlayerData = newTableData.table.players.find(
+          (player: RawPlayer) => player.player_id === app.player?.player_id
+        );
+
+        newPlayerData &&
+          setApp({
+            ...app,
+            player: newPlayerData,
+            state: newTableData.state,
+            table: newTableData.table,
+          });
       }
     );
+    socket.on(SOCKETEVENTS.on.winner, async (anon: any) => {
+      console.log(anon)
+      setWinner_id(anon.winner_id);
+    });
   }, [app, socket]); // Make sure to include app.room as a dependency
 
   window.addEventListener("beforeunload", () => {
     // Emit a custom event to the server indicating intentional disconnect
-    //socket.disconnect();
+    // socket.disconnect();
   });
-  const renderCards = (rawCardData: RawPokerCard[]) => {};
   return (
     <div
       style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
@@ -64,98 +79,104 @@ export default function PokerRoom() {
       <p>Round: {app.table?.bettingRound}</p>
       <p>no. of Players: {app.table?.players.length}</p>
       <p>active Index:{app.table?.activeIndex}</p>
-      <div style={{ marginBottom: 100 }}>
+      <div>
+        {app.table?.cards
+          .filter(
+            (card: RawPokerCard) => !card.faceDown && card.playerId === null
+          ) // Filter the cards
+          .map((card: RawPokerCard, index: number) => (
+            <RenderServerCard card={card} isFaceDown={false}></RenderServerCard>
+          ))}
+      </div>
+      <div style={{ marginBottom: 500 }}>
         {app.table?.players.map((player: RawPlayer, index: number) => (
           <div
             key={player.player_id}
             className="player-card"
             style={{
+              marginTop: 100,
               transform: `rotate(${
-                (360 / app.table?.players.length!) * index
-              }deg) translate(100px) rotate(-${
-                (360 / app.table?.players.length!) * index
+                (270 / app.table?.players.length!) * index
+              }deg) translate(200px) rotate(-${
+                (270 / app.table?.players.length!) * index
               }deg)`,
             }}
           >
             {/* Render player avatar and cards here */}
             <p>{player.name}</p>
 
-            {player.cards.length > 0 &&
-              player.cards.map((card: RawPokerCard, cardIndex: number) => (
-                <p>Suit{card.suit}</p>
-              ))}
+            {player.cards.length > 0 && (
+              <PlayerCardsRenderer
+                playingCards={playingCards}
+                rawPlayingCards={player.cards}
+              ></PlayerCardsRenderer>
+            )}
+            {app.table?.players &&
+              app.player &&
+              app.player.player_id === player.player_id &&
+              app.table.bettingRound !== BettingRounds.BEGINNING &&
+              app.table.bettingRound !== BettingRounds.ENDING &&
+              app.table.activeIndex ===
+                player.playerTableOrderInstance.order && (
+                <DisplayGameMoveButtons
+                  player_id={player.player_id}
+                  players={app.table?.players}
+                  winner_id={winner_id}
+                  app={app}
+                  socket={socket}
+                ></DisplayGameMoveButtons>
+              )}
+            {app.table?.players &&
+              app.player &&
+              app.player.player_id === player.player_id &&
+              (app.table.bettingRound === BettingRounds.BEGINNING ||
+                winner_id > 0) && (
+                <DisplayHostButtons
+                  player_id={app.player.player_id}
+                  players={app.table?.players}
+                  table={app.table}
+                  app={app}
+                  socket={socket}
+                  disabled={app.table.players.length < 2 ? true : false}
+                ></DisplayHostButtons>
+              )}
           </div>
         ))}
+        {winner_id > 0 && app.player?.playerTableOrderInstance.isHost && (
+          <>
+            <PrimaryButton
+              onClick={() => {
+                app.player?.player_id &&
+                  app.table?.pokerTable_id &&
+                  PlayerController(
+                    socket,
+                    app.player?.player_id,
+                    app.table?.pokerTable_id,
+                    PlayerControls.ENDGAME
+                  );
+                setWinner_id(0);
+              }}
+              disabled={false}
+              text="end game"
+            ></PrimaryButton>
+            <PrimaryButton
+              onClick={() => {
+                app.player?.player_id &&
+                  app.table?.pokerTable_id &&
+                  PlayerController(
+                    socket,
+                    app.player?.player_id,
+                    app.table?.pokerTable_id,
+                    PlayerControls.NEXTROUND
+                  );
+                setWinner_id(0);
+              }}
+              disabled={false}
+              text="Next Round"
+            ></PrimaryButton>
+          </>
+        )}
       </div>
-      <PrimaryButton
-        onClick={() => {
-          app.player?.player_id &&
-            app.table?.pokerTable_id &&
-            PlayerController(
-              socket,
-              app.player?.player_id,
-              app.table?.pokerTable_id,
-              PlayerControls.STARTGAME
-            );
-        }}
-        text="start game"
-      ></PrimaryButton>
-      <PrimaryButton
-        onClick={() => {
-          app.player?.player_id &&
-            app.table?.pokerTable_id &&
-            PlayerController(
-              socket,
-              app.player?.player_id,
-              app.table?.pokerTable_id,
-              PlayerControls.ENDGAME
-            );
-        }}
-        text="end game"
-      ></PrimaryButton>
-      <PrimaryButton
-        onClick={() => {
-          app.player?.player_id &&
-            app.table?.pokerTable_id &&
-            PlayerController(
-              socket,
-              app.player?.player_id,
-              app.table?.pokerTable_id,
-              PlayerControls.BET,
-              10
-            );
-        }}
-        text="bet"
-      ></PrimaryButton>
-      <PrimaryButton
-        onClick={() => {
-          app.player?.player_id &&
-            app.table?.pokerTable_id &&
-            PlayerController(
-              socket,
-              app.player?.player_id,
-              app.table?.pokerTable_id,
-              PlayerControls.FOLD
-            );
-        }}
-        text="fold"
-      ></PrimaryButton>
-      <PrimaryButton
-        onClick={() => {
-          app.player?.player_id &&
-            app.table?.pokerTable_id &&
-            PlayerController(
-              socket,
-              app.player?.player_id,
-              app.table?.pokerTable_id,
-              PlayerControls.BUYIN,
-              10
-            );
-        }}
-        text="buy in"
-      ></PrimaryButton>
-
-      {/* Add more UI elements based on tableData */}
     </div>
   );
 }

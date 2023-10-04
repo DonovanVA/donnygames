@@ -1,15 +1,20 @@
 import React from "react";
-import { PlayingCard } from "../Types/interfaces";
-import cardBack from "../Assets/playing-cards/back.png";
-import stylishBack from "../Assets/playing-cards/stylishBack.png";
-import "./Card.css";
+import { PlayingCard } from "../../Types/interfaces";
+import stylishBack from "../../Assets/playing-cards/stylishBack.png";
+
 
 // cards.ts
 
-const Card = ({ card, isBack }: { card: PlayingCard; isBack: boolean }) => {
+const RenderLocalCard = ({
+  card,
+  isFaceDown,
+}: {
+  card: PlayingCard;
+  isFaceDown: boolean;
+}) => {
   return (
     <>
-      {isBack ? (
+      {isFaceDown ? (
         <>
           <img src={stylishBack} height="120px" />
         </>
@@ -27,4 +32,4 @@ const Card = ({ card, isBack }: { card: PlayingCard; isBack: boolean }) => {
   );
 };
 
-export default Card;
+export default RenderLocalCard;

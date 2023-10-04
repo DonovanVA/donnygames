@@ -1,10 +1,21 @@
 import React from "react";
 import { ButtonProps } from "../../Types/interfaces";
 
-export default function BackButton({ text, onClick }: ButtonProps) {
+export default function BackButton({
+  text,
+  onClick,
+  disabled,
+  errormsg,
+}: ButtonProps) {
   return (
     <div
-      onClick={onClick}
+      onClick={
+        !disabled
+          ? onClick
+          : () => {
+              console.log(errormsg);
+            }
+      }
       style={{
         display: "flex",
         flexDirection: "row",

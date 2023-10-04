@@ -1,5 +1,5 @@
 import React from "react";
-import Card from "../../Card/Card";
+
 import { playingCards } from "../../Card/Cards";
 import { PlayingCard, Suit } from "../../Types/interfaces";
 import { useState } from "react";
@@ -14,6 +14,7 @@ import { isRed, getValue } from "./Context";
 import { useNavigate } from "react-router-dom";
 import BackButton from "../../UI/Buttons/BackButton";
 import { MainRoutes } from "../../Routes/Routes";
+import RenderLocalCard from "../../Card/Renderer/RenderLocalCard";
 export default function BangTheBus() {
   const navigation = useNavigate();
   const [deckOfCards, setDeckOfCards] = useState<PlayingCard[]>(
@@ -127,12 +128,14 @@ export default function BangTheBus() {
               onClick={() => {
                 checkAnswer(deckOfCards, discardPile, stage, "up");
               }}
+              disabled={false}
             ></PrimaryButton>
             <PrimaryButton
               text="down"
               onClick={() => {
                 checkAnswer(deckOfCards, discardPile, stage, "down");
               }}
+              disabled={false}
             ></PrimaryButton>
           </div>
         );
@@ -144,12 +147,14 @@ export default function BangTheBus() {
               onClick={() => {
                 checkAnswer(deckOfCards, discardPile, stage, "inBetween");
               }}
+              disabled={false}
             ></PrimaryButton>
             <PrimaryButton
               text="outside"
               onClick={() => {
                 checkAnswer(deckOfCards, discardPile, stage, "outside");
               }}
+              disabled={false}
             ></PrimaryButton>
           </div>
         );
@@ -161,24 +166,28 @@ export default function BangTheBus() {
               onClick={() => {
                 checkAnswer(deckOfCards, discardPile, stage, Suit.SPADES);
               }}
+              disabled={false}
             ></PrimaryButton>
             <PrimaryButton
               text="diamond"
               onClick={() => {
                 checkAnswer(deckOfCards, discardPile, stage, Suit.DIAMONDS);
               }}
+              disabled={false}
             ></PrimaryButton>
             <PrimaryButton
               text="heart"
               onClick={() => {
                 checkAnswer(deckOfCards, discardPile, stage, Suit.HEARTS);
               }}
+              disabled={false}
             ></PrimaryButton>
             <PrimaryButton
               text="clubs"
               onClick={() => {
                 checkAnswer(deckOfCards, discardPile, stage, Suit.CLUBS);
               }}
+              disabled={false}
             ></PrimaryButton>
           </div>
         );
@@ -197,6 +206,7 @@ export default function BangTheBus() {
               onClick={() => {
                 resetGame();
               }}
+              disabled={false}
             ></PrimaryButton>
           </div>
         );
@@ -208,12 +218,14 @@ export default function BangTheBus() {
               onClick={() => {
                 checkAnswer(deckOfCards, discardPile, stage, "red");
               }}
+              disabled={false}
             ></PrimaryButton>
             <PrimaryButton
               text="black"
               onClick={() => {
                 checkAnswer(deckOfCards, discardPile, stage, "black");
               }}
+              disabled={false}
             ></PrimaryButton>
           </div>
         );
@@ -226,6 +238,7 @@ export default function BangTheBus() {
         onClick={() => {
           navigation(`${MainRoutes.Home.path}`);
         }}
+        disabled={false}
         text=""
       ></BackButton>
       <div
@@ -255,11 +268,15 @@ export default function BangTheBus() {
               onClick={() => {
                 resetGame();
               }}
+              disabled={false}
             ></PrimaryButton>
           </div>
         ) : (
           <>
-            <Card card={deckOfCards[0]} isBack={true}></Card>
+            <RenderLocalCard
+              card={deckOfCards[0]}
+              isFaceDown={true}
+            ></RenderLocalCard>
 
             <p>{deckOfCards.length} cards left</p>
             {isGameOver ? (
@@ -269,12 +286,14 @@ export default function BangTheBus() {
                   onClick={() => {
                     resetGame();
                   }}
+                  disabled={false}
                 ></PrimaryButton>
                 <PrimaryButton
                   text="retry"
                   onClick={() => {
                     retry();
                   }}
+                  disabled={false}
                 ></PrimaryButton>
               </div>
             ) : (
@@ -299,7 +318,10 @@ export default function BangTheBus() {
                     alignItems: "center",
                   }}
                 >
-                  <Card card={getTopOfDeck(discardPile)} isBack={false}></Card>
+                  <RenderLocalCard
+                    card={getTopOfDeck(discardPile)}
+                    isFaceDown={false}
+                  ></RenderLocalCard>
                   <p>Drawn Card</p>
                 </div>
               ) : (
@@ -314,10 +336,10 @@ export default function BangTheBus() {
                     alignItems: "center",
                   }}
                 >
-                  <Card
+                  <RenderLocalCard
                     card={discardPile[discardPile.length - 2]}
-                    isBack={false}
-                  ></Card>
+                    isFaceDown={false}
+                  ></RenderLocalCard>
                   <p>Prev Card</p>
                 </div>
               ) : (
@@ -333,10 +355,10 @@ export default function BangTheBus() {
                     alignItems: "center",
                   }}
                 >
-                  <Card
+                  <RenderLocalCard
                     card={discardPile[discardPile.length - 3]}
-                    isBack={false}
-                  ></Card>
+                    isFaceDown={false}
+                  ></RenderLocalCard>
                   <p>Prev Card</p>
                 </div>
               ) : (
@@ -353,10 +375,10 @@ export default function BangTheBus() {
                     alignItems: "center",
                   }}
                 >
-                  <Card
+                  <RenderLocalCard
                     card={discardPile[discardPile.length - 2]}
-                    isBack={false}
-                  ></Card>
+                    isFaceDown={false}
+                  ></RenderLocalCard>
                   <p>Prev Card</p>
                 </div>
               ) : (
