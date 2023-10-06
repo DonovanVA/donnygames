@@ -7,7 +7,8 @@ export const SOCKETEVENTS = {
     getTableData: "getTableData",
     roundSummary: "roundSummary",
     connect: "connect",
-    winner:"getWinner",
+    winner: "getWinner",
+    serverError: "serverError",
   },
 
   emit: {
@@ -16,6 +17,5 @@ export const SOCKETEVENTS = {
     intentionalDisconnect: "intentionalDisconnect",
     disconnect: "disconnect",
     PlayerAction: "PlayerAction",
-
   },
 };

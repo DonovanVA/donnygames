@@ -60,6 +60,8 @@ export interface RawTableData {
   playerTableOrderInstance: RawPlayerTableOrderInstance[];
   players: RawPlayer[];
   pokerTable_id: number;
+  numRaises: number;
+  sidePot: RawSidePot[];
   pot: number;
 }
 
@@ -67,4 +69,10 @@ export interface RawPokerServiceData {
   state: BettingRounds;
   player: RawPlayer;
   table: RawTableData;
+}
+
+export interface RawSidePot {
+  player_id: number;
+  amount: number;
+  order: number;
 }
